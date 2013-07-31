@@ -36,7 +36,7 @@ Mailbox::~Mailbox()
 	//
 }
 
-ReturnValue Mailbox::__queryAdd(int32_t index, const Thing* thing, uint32_t count,
+ReturnValue Mailbox::queryAdd(int32_t index, const Thing* thing, uint32_t count,
                                 uint32_t flags, Creature* actor/* = NULL*/) const
 {
 	if (const Item* item = thing->getItem()) {
@@ -48,30 +48,30 @@ ReturnValue Mailbox::__queryAdd(int32_t index, const Thing* thing, uint32_t coun
 	return RET_NOTPOSSIBLE;
 }
 
-ReturnValue Mailbox::__queryMaxCount(int32_t index, const Thing* thing, uint32_t count, uint32_t& maxQueryCount,
+ReturnValue Mailbox::queryMaxCount(int32_t index, const Thing* thing, uint32_t count, uint32_t& maxQueryCount,
                                      uint32_t flags) const
 {
 	maxQueryCount = std::max<uint32_t>(1, count);
 	return RET_NOERROR;
 }
 
-ReturnValue Mailbox::__queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const
+ReturnValue Mailbox::queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const
 {
 	return RET_NOTPOSSIBLE;
 }
 
-Cylinder* Mailbox::__queryDestination(int32_t& index, const Thing* thing, Item** destItem,
+Cylinder* Mailbox::queryDestination(int32_t& index, const Thing* thing, Item** destItem,
                                       uint32_t& flags)
 {
 	return this;
 }
 
-void Mailbox::__addThing(Thing* thing)
+void Mailbox::addThing(Thing* thing)
 {
-	return __addThing(0, thing);
+	return addThing(0, thing);
 }
 
-void Mailbox::__addThing(int32_t index, Thing* thing)
+void Mailbox::addThing(int32_t index, Thing* thing)
 {
 	if (Item* item = thing->getItem()) {
 		if (canSend(item)) {
@@ -80,17 +80,17 @@ void Mailbox::__addThing(int32_t index, Thing* thing)
 	}
 }
 
-void Mailbox::__updateThing(Thing* thing, uint16_t itemId, uint32_t count)
+void Mailbox::updateThing(Thing* thing, uint16_t itemId, uint32_t count)
 {
 	//
 }
 
-void Mailbox::__replaceThing(uint32_t index, Thing* thing)
+void Mailbox::replaceThing(uint32_t index, Thing* thing)
 {
 	//
 }
 
-void Mailbox::__removeThing(Thing* thing, uint32_t count)
+void Mailbox::removeThing(Thing* thing, uint32_t count)
 {
 	//
 }

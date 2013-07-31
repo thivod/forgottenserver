@@ -258,7 +258,7 @@ bool ProtocolGame::connect(uint32_t playerId, OperatingSystem_t operatingSystem)
 	player->isConnecting = false;
 
 	player->client = this;
-	sendAddCreature(player, player->getPosition(), player->getTile()->__getIndexOfThing(player), false);
+	sendAddCreature(player, player->getPosition(), player->getTile()->getIndexOfThing(player), false);
 	player->lastIP = player->getIP();
 	player->lastLoginSaved = std::max<time_t>(time(NULL), player->lastLoginSaved + 1);
 	m_acceptPackets = true;
@@ -1726,7 +1726,7 @@ void ProtocolGame::sendSaleItemList(const std::list<ShopInfo>& shop)
 					subtype = (sInfo.subType == 0 ? -1 : sInfo.subType);
 				}
 
-				uint32_t count = player->__getItemTypeCount(sInfo.itemId, subtype);
+				uint32_t count = player->getItemTypeCount(sInfo.itemId, subtype);
 
 				if (count > 0) {
 					saleMap[sInfo.itemId] = count;
@@ -1738,7 +1738,7 @@ void ProtocolGame::sendSaleItemList(const std::list<ShopInfo>& shop)
 		// We need a temporary map since the finished map should only contain items
 		// available in the shop
 		std::map<uint32_t, uint32_t> tempSaleMap;
-		player->__getAllItemTypeCount(tempSaleMap);
+		player->getAllItemTypeCount(tempSaleMap);
 
 		// We must still check manually for the special items that require subtype matches
 		// (That is, fluids such as potions etc., actually these items are very few since
@@ -1758,7 +1758,7 @@ void ProtocolGame::sendSaleItemList(const std::list<ShopInfo>& shop)
 					uint32_t count = subtype;
 
 					if (!it.isFluidContainer() && !it.isSplash()) {
-						count = player->__getItemTypeCount(sInfo.itemId, subtype);    // This shop item requires extra checks
+						count = player->getItemTypeCount(sInfo.itemId, subtype);    // This shop item requires extra checks
 					}
 
 					if (count > 0) {

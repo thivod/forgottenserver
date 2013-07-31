@@ -36,9 +36,9 @@ HouseTile::~HouseTile()
 	//
 }
 
-void HouseTile::__addThing(int32_t index, Thing* thing)
+void HouseTile::addThing(int32_t index, Thing* thing)
 {
-	Tile::__addThing(index, thing);
+	Tile::addThing(index, thing);
 
 	if (!thing->getParent()) {
 		return;
@@ -49,9 +49,9 @@ void HouseTile::__addThing(int32_t index, Thing* thing)
 	}
 }
 
-void HouseTile::__internalAddThing(uint32_t index, Thing* thing)
+void HouseTile::internalAddThing(uint32_t index, Thing* thing)
 {
-	Tile::__internalAddThing(index, thing);
+	Tile::internalAddThing(index, thing);
 
 	if (!thing->getParent()) {
 		return;
@@ -81,7 +81,7 @@ void HouseTile::updateHouse(Item* item)
 	}
 }
 
-ReturnValue HouseTile::__queryAdd(int32_t index, const Thing* thing, uint32_t count, uint32_t flags, Creature* actor/* = NULL*/) const
+ReturnValue HouseTile::queryAdd(int32_t index, const Thing* thing, uint32_t count, uint32_t flags, Creature* actor/* = NULL*/) const
 {
 	if (const Creature* creature = thing->getCreature()) {
 		if (const Player* player = creature->getPlayer()) {
@@ -98,10 +98,10 @@ ReturnValue HouseTile::__queryAdd(int32_t index, const Thing* thing, uint32_t co
 		}
 	}
 
-	return Tile::__queryAdd(index, thing, count, flags, actor);
+	return Tile::queryAdd(index, thing, count, flags, actor);
 }
 
-Cylinder* HouseTile::__queryDestination(int32_t& index, const Thing* thing, Item** destItem, uint32_t& flags)
+Cylinder* HouseTile::queryDestination(int32_t& index, const Thing* thing, Item** destItem, uint32_t& flags)
 {
 	if (const Creature* creature = thing->getCreature()) {
 		if (const Player* player = creature->getPlayer()) {
@@ -110,7 +110,7 @@ Cylinder* HouseTile::__queryDestination(int32_t& index, const Thing* thing, Item
 				Tile* destTile = g_game.getTile(entryPos.x, entryPos.y, entryPos.z);
 
 				if (!destTile) {
-					std::cout << "Error: [HouseTile::__queryDestination] House entry not correct"
+					std::cout << "Error: [HouseTile::queryDestination] House entry not correct"
 					          << " - Name: " << house->getName()
 					          << " - House id: " << house->getHouseId()
 					          << " - Tile not found: " << entryPos << std::endl;
@@ -130,5 +130,5 @@ Cylinder* HouseTile::__queryDestination(int32_t& index, const Thing* thing, Item
 		}
 	}
 
-	return Tile::__queryDestination(index, thing, destItem, flags);
+	return Tile::queryDestination(index, thing, destItem, flags);
 }

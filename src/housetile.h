@@ -30,14 +30,14 @@ class HouseTile : public DynamicTile
 		~HouseTile();
 
 		//cylinder implementations
-		virtual ReturnValue __queryAdd(int32_t index, const Thing* thing, uint32_t count,
+		virtual ReturnValue queryAdd(int32_t index, const Thing* thing, uint32_t count,
 		                               uint32_t flags, Creature* actor = NULL) const;
 
-		virtual Cylinder* __queryDestination(int32_t& index, const Thing* thing, Item** destItem,
+		virtual Cylinder* queryDestination(int32_t& index, const Thing* thing, Item** destItem,
 		                                     uint32_t& flags);
 
-		virtual void __addThing(int32_t index, Thing* thing);
-		virtual void __internalAddThing(uint32_t index, Thing* thing);
+		virtual void addThing(int32_t index, Thing* thing);
+		virtual void internalAddThing(uint32_t index, Thing* thing);
 
 		House* getHouse() {
 			return house;

@@ -739,7 +739,7 @@ class Item : virtual public Thing
 			return true;
 		}
 
-		virtual void __startDecaying();
+		virtual void startDecaying();
 
 		bool isLoadedFromMap() const {
 			return loadedFromMap;

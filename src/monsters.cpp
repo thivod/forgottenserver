@@ -147,10 +147,10 @@ void MonsterType::createLoot(Container* corpse)
 					if (!createLootContainer(container, *it)) {
 						delete container;
 					} else if (g_game.internalAddItem(corpse, tmpItem) != RET_NOERROR) {
-						corpse->__internalAddThing(tmpItem);
+						corpse->internalAddThing(tmpItem);
 					}
 				} else if (g_game.internalAddItem(corpse, tmpItem) != RET_NOERROR) {
-					corpse->__internalAddThing(tmpItem);
+					corpse->internalAddThing(tmpItem);
 				}
 			}
 		}
@@ -176,7 +176,7 @@ void MonsterType::createLoot(Container* corpse)
 		}
 	}
 
-	corpse->__startDecaying();
+	corpse->startDecaying();
 }
 
 std::list<Item*> MonsterType::createLootItem(const LootBlock& lootBlock)
@@ -244,10 +244,10 @@ bool MonsterType::createLootContainer(Container* parent, const LootBlock& lootbl
 					if (!createLootContainer(container, *it)) {
 						delete container;
 					} else {
-						parent->__internalAddThing(container);
+						parent->internalAddThing(container);
 					}
 				} else {
-					parent->__internalAddThing(tmpItem);
+					parent->internalAddThing(tmpItem);
 				}
 			}
 		}

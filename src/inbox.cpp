@@ -32,7 +32,7 @@ Inbox::~Inbox()
 	//
 }
 
-ReturnValue Inbox::__queryAdd(int32_t index, const Thing* thing, uint32_t count,
+ReturnValue Inbox::queryAdd(int32_t index, const Thing* thing, uint32_t count,
                               uint32_t flags, Creature* actor/* = NULL*/) const
 {
 	bool skipLimit = hasBitSet(FLAG_NOLIMIT, flags);
@@ -41,7 +41,7 @@ ReturnValue Inbox::__queryAdd(int32_t index, const Thing* thing, uint32_t count,
 		return RET_CONTAINERNOTENOUGHROOM;
 	}
 
-	return Container::__queryAdd(index, thing, count, flags, actor);
+	return Container::queryAdd(index, thing, count, flags, actor);
 }
 
 void Inbox::postAddNotification(Thing* thing, const Cylinder* oldParent, int32_t index, cylinderlink_t link /*= LINK_OWNER*/)

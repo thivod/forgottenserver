@@ -2007,7 +2007,7 @@ int32_t LuaScriptInterface::internalGetPlayerInfo(lua_State* L, PlayerInfo_t inf
 			uint32_t stackpos;
 			const Tile* tile = player->getTile();
 			if (tile) {
-				stackpos = tile->__getIndexOfThing(player);
+				stackpos = tile->getIndexOfThing(player);
 			} else {
 				stackpos = 0;
 			}
@@ -3244,7 +3244,7 @@ int32_t LuaScriptInterface::luaDoRelocate(lua_State* L)
 		int32_t thingCount = fromTile->getThingCount();
 
 		for (int32_t i = thingCount - 1; i >= 0; --i) {
-			Thing* thing = fromTile->__getThing(i);
+			Thing* thing = fromTile->getThing(i);
 
 			if (thing) {
 				if (Item* item = thing->getItem()) {
@@ -3550,7 +3550,7 @@ int32_t LuaScriptInterface::luaGetThingfromPos(lua_State* L)
 		} else if (pos.stackpos == 253) {
 			thing = tile->getTopCreature();
 		} else {
-			thing = tile->__getThing(pos.stackpos);
+			thing = tile->getThing(pos.stackpos);
 		}
 
 		if (thing) {
@@ -3738,7 +3738,7 @@ int32_t LuaScriptInterface::luaGetTileThingByPos(lua_State* L)
 		return 1;
 	}
 
-	Thing* thing = tile->__getThing(pos.stackpos);
+	Thing* thing = tile->getThing(pos.stackpos);
 
 	if (!thing) {
 		pushThing(L, NULL, 0);
@@ -4384,7 +4384,7 @@ int32_t LuaScriptInterface::luaGetPlayerItemCount(lua_State* L)
 
 	const Player* player = g_game.getPlayerByID(cid);
 	if (player) {
-		uint32_t n = player->__getItemTypeCount(itemId, subtype);
+		uint32_t n = player->getItemTypeCount(itemId, subtype);
 		lua_pushnumber(L, n);
 	} else {
 		reportErrorFunc(getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
@@ -4743,7 +4743,7 @@ int32_t LuaScriptInterface::luaGetPlayerSlotItem(lua_State* L)
 
 	const Player* player = g_game.getPlayerByID(cid);
 	if (player) {
-		Thing* thing = player->__getThing(slot);
+		Thing* thing = player->getThing(slot);
 		if (thing) {
 			uint32_t uid = getScriptEnv()->addThing(thing);
 			pushThing(L, thing, uid);
@@ -4848,7 +4848,7 @@ int32_t LuaScriptInterface::luaQueryTileAddThing(lua_State* L)
 		return 1;
 	}
 
-	ReturnValue ret = tile->__queryAdd(0, thing, 1, flags);
+	ReturnValue ret = tile->queryAdd(0, thing, 1, flags);
 	lua_pushnumber(L, (uint32_t)ret);
 	return 1;
 }
@@ -4868,7 +4868,7 @@ int32_t LuaScriptInterface::luaGetThingPos(lua_State* L)
 		pos = thing->getPosition();
 
 		if (Tile* tile = thing->getTile()) {
-			stackpos = tile->__getIndexOfThing(thing);
+			stackpos = tile->getIndexOfThing(thing);
 		}
 	} else {
 		reportErrorFunc(getErrorDesc(LUA_ERROR_THING_NOT_FOUND));
@@ -7224,7 +7224,7 @@ int32_t LuaScriptInterface::luaGetCreaturePosition(lua_State* L)
 		uint32_t stackpos = 0;
 
 		if (Tile* tile = creature->getTile()) {
-			stackpos = tile->__getIndexOfThing(creature);
+			stackpos = tile->getIndexOfThing(creature);
 		}
 
 		pushPosition(L, pos, stackpos);

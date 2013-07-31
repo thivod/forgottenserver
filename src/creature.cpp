@@ -397,7 +397,7 @@ void Creature::updateTileCache(const Tile* tile, int32_t dx, int32_t dy)
 		int32_t x = (mapWalkWidth - 1) / 2 + dx;
 		int32_t y = (mapWalkHeight - 1) / 2 + dy;
 
-		localMapCache[y][x] = (tile && tile->__queryAdd(0, this, 1,
+		localMapCache[y][x] = (tile && tile->queryAdd(0, this, 1,
 		                       FLAG_PATHFINDING | FLAG_IGNOREFIELDDAMAGE) == RET_NOERROR);
 	}
 }

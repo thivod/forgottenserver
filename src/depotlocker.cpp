@@ -49,10 +49,10 @@ Attr_ReadValue DepotLocker::readAttr(AttrTypes_t attr, PropStream& propStream)
 	}
 }
 
-ReturnValue DepotLocker::__queryAdd(int32_t index, const Thing* thing, uint32_t count,
+ReturnValue DepotLocker::queryAdd(int32_t index, const Thing* thing, uint32_t count,
                                     uint32_t flags, Creature* actor/* = NULL*/) const
 {
-	return Container::__queryAdd(index, thing, count, flags, actor);
+	return Container::queryAdd(index, thing, count, flags, actor);
 }
 
 void DepotLocker::postAddNotification(Thing* thing, const Cylinder* oldParent, int32_t index, cylinderlink_t link /*= LINK_OWNER*/)

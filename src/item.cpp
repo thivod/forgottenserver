@@ -1539,7 +1539,7 @@ void ItemAttributes::deleteAttrs(Attribute* attr)
 	}
 }
 
-void Item::__startDecaying()
+void Item::startDecaying()
 {
 	g_game.startDecay(this);
 }

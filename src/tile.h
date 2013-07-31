@@ -305,33 +305,33 @@ class Tile : public Cylinder
 		int32_t getNewCreatureStackpos(const Player* player);
 
 		//cylinder implementations
-		virtual ReturnValue __queryAdd(int32_t index, const Thing* thing, uint32_t count,
+		virtual ReturnValue queryAdd(int32_t index, const Thing* thing, uint32_t count,
 		                               uint32_t flags, Creature* actor = NULL) const;
-		virtual ReturnValue __queryMaxCount(int32_t index, const Thing* thing, uint32_t count,
+		virtual ReturnValue queryMaxCount(int32_t index, const Thing* thing, uint32_t count,
 		                                    uint32_t& maxQueryCount, uint32_t flags) const;
-		virtual ReturnValue __queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const;
-		virtual Cylinder* __queryDestination(int32_t& index, const Thing* thing, Item** destItem,
+		virtual ReturnValue queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const;
+		virtual Cylinder* queryDestination(int32_t& index, const Thing* thing, Item** destItem,
 		                                     uint32_t& flags);
 
-		virtual void __addThing(Thing* thing);
-		virtual void __addThing(int32_t index, Thing* thing);
+		virtual void addThing(Thing* thing);
+		virtual void addThing(int32_t index, Thing* thing);
 
-		virtual void __updateThing(Thing* thing, uint16_t itemId, uint32_t count);
-		virtual void __replaceThing(uint32_t index, Thing* thing);
+		virtual void updateThing(Thing* thing, uint16_t itemId, uint32_t count);
+		virtual void replaceThing(uint32_t index, Thing* thing);
 
-		virtual void __removeThing(Thing* thing, uint32_t count);
+		virtual void removeThing(Thing* thing, uint32_t count);
 
-		virtual int32_t __getIndexOfThing(const Thing* thing) const;
-		virtual int32_t __getFirstIndex() const;
-		virtual int32_t __getLastIndex() const;
-		virtual uint32_t __getItemTypeCount(uint16_t itemId, int32_t subType = -1) const;
-		virtual Thing* __getThing(uint32_t index) const;
+		virtual int32_t getIndexOfThing(const Thing* thing) const;
+		virtual int32_t getFirstIndex() const;
+		virtual int32_t getLastIndex() const;
+		virtual uint32_t getItemTypeCount(uint16_t itemId, int32_t subType = -1) const;
+		virtual Thing* getThing(uint32_t index) const;
 
 		virtual void postAddNotification(Thing* thing, const Cylinder* oldParent, int32_t index, cylinderlink_t link = LINK_OWNER);
 		virtual void postRemoveNotification(Thing* thing, const Cylinder* newParent, int32_t index, bool isCompleteRemoval, cylinderlink_t link = LINK_OWNER);
 
-		virtual void __internalAddThing(Thing* thing);
-		virtual void __internalAddThing(uint32_t index, Thing* thing);
+		virtual void internalAddThing(Thing* thing);
+		virtual void internalAddThing(uint32_t index, Thing* thing);
 
 		virtual const Position& getPosition() const {
 			return tilePos;

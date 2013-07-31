@@ -32,7 +32,7 @@ DepotChest::~DepotChest()
 	//
 }
 
-ReturnValue DepotChest::__queryAdd(int32_t index, const Thing* thing, uint32_t count,
+ReturnValue DepotChest::queryAdd(int32_t index, const Thing* thing, uint32_t count,
                                    uint32_t flags, Creature* actor/* = NULL*/) const
 {
 	const Item* item = thing->getItem();
@@ -61,7 +61,7 @@ ReturnValue DepotChest::__queryAdd(int32_t index, const Thing* thing, uint32_t c
 		}
 	}
 
-	return Container::__queryAdd(index, thing, count, flags, actor);
+	return Container::queryAdd(index, thing, count, flags, actor);
 }
 
 void DepotChest::postAddNotification(Thing* thing, const Cylinder* oldParent, int32_t index, cylinderlink_t link /*= LINK_OWNER*/)

@@ -492,7 +492,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name)
 			int32_t pid = pair.second;
 
 			if (pid >= 1 && pid <= 10) {
-				player->__internalAddThing(pid, item);
+				player->internalAddThing(pid, item);
 			} else {
 				ItemMap::const_iterator it2 = itemMap.find(pid);
 				if (it2 == itemMap.end()) {
@@ -501,7 +501,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name)
 
 				Container* container = it2->second.first->getContainer();
 				if (container) {
-					container->__internalAddThing(item);
+					container->internalAddThing(item);
 				}
 			}
 		}
@@ -525,7 +525,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name)
 			if (pid >= 0 && pid < 100) {
 				DepotChest* depotChest = player->getDepotChest(pid, true);
 				if (depotChest) {
-					depotChest->__internalAddThing(item);
+					depotChest->internalAddThing(item);
 				}
 			} else {
 				ItemMap::const_iterator it2 = itemMap.find(pid);
@@ -535,7 +535,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name)
 
 				Container* container = it2->second.first->getContainer();
 				if (container) {
-					container->__internalAddThing(item);
+					container->internalAddThing(item);
 				}
 			}
 		}
@@ -557,7 +557,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name)
 			int32_t pid = pair.second;
 
 			if (pid >= 0 && pid < 100) {
-				player->getInbox()->__internalAddThing(item);
+				player->getInbox()->internalAddThing(item);
 			} else {
 				ItemMap::const_iterator it2 = itemMap.find(pid);
 
@@ -567,7 +567,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name)
 
 				Container* container = it2->second.first->getContainer();
 				if (container) {
-					container->__internalAddThing(item);
+					container->internalAddThing(item);
 				}
 			}
 		}

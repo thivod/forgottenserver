@@ -989,7 +989,7 @@ void Player::dropLoot(Container* corpse)
 	}
 
 	if (!inventory[SLOT_BACKPACK]) {
-		__internalAddThing(SLOT_BACKPACK, Item::CreateItem(1988));
+		internalAddThing(SLOT_BACKPACK, Item::CreateItem(1988));
 	}
 }
 
@@ -1185,9 +1185,9 @@ DepotLocker* Player::getDepotLocker(uint32_t depotId)
 
 	DepotLocker* depotLocker = new DepotLocker(ITEM_LOCKER1);
 	depotLocker->setDepotId(depotId);
-	depotLocker->__internalAddThing(Item::CreateItem(ITEM_MARKET));
-	depotLocker->__internalAddThing(inbox);
-	depotLocker->__internalAddThing(getDepotChest(depotId, true));
+	depotLocker->internalAddThing(Item::CreateItem(ITEM_MARKET));
+	depotLocker->internalAddThing(inbox);
+	depotLocker->internalAddThing(getDepotChest(depotId, true));
 	depotLockerMap[depotId] = depotLocker;
 	return depotLocker;
 }
@@ -1647,7 +1647,7 @@ void Player::onCreatureAppear(const Creature* creature, bool isLogin)
 		for (int32_t slot = SLOT_FIRST; slot < SLOT_LAST; ++slot) {
 			Item* item = getInventoryItem((slots_t)slot);
 			if (item) {
-				item->__startDecaying();
+				item->startDecaying();
 				g_moveEvents->onPlayerEquip(this, item, (slots_t)slot, false);
 			}
 		}
@@ -2904,7 +2904,7 @@ bool Player::hasCapacity(const Item* item, uint32_t count) const
 	return itemWeight <= getFreeCapacity();
 }
 
-ReturnValue Player::__queryAdd(int32_t index, const Thing* thing, uint32_t count, uint32_t flags, Creature* actor/* = NULL*/) const
+ReturnValue Player::queryAdd(int32_t index, const Thing* thing, uint32_t count, uint32_t flags, Creature* actor/* = NULL*/) const
 {
 	const Item* item = thing->getItem();
 
@@ -3105,7 +3105,7 @@ ReturnValue Player::__queryAdd(int32_t index, const Thing* thing, uint32_t count
 	return ret;
 }
 
-ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t count, uint32_t& maxQueryCount,
+ReturnValue Player::queryMaxCount(int32_t index, const Thing* thing, uint32_t count, uint32_t& maxQueryCount,
                                     uint32_t flags) const
 {
 	const Item* item = thing->getItem();
@@ -3121,25 +3121,25 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 			if (inventoryItem) {
 				if (Container* subContainer = inventoryItem->getContainer()) {
 					uint32_t queryCount = 0;
-					subContainer->__queryMaxCount(INDEX_WHEREEVER, item, item->getItemCount(), queryCount, flags);
+					subContainer->queryMaxCount(INDEX_WHEREEVER, item, item->getItemCount(), queryCount, flags);
 					n += queryCount;
 
 					//iterate through all items, including sub-containers (deep search)
 					for (ContainerIterator cit = subContainer->begin(); cit != subContainer->end(); ++cit) {
 						if (Container* tmpContainer = (*cit)->getContainer()) {
 							queryCount = 0;
-							tmpContainer->__queryMaxCount(INDEX_WHEREEVER, item, item->getItemCount(), queryCount, flags);
+							tmpContainer->queryMaxCount(INDEX_WHEREEVER, item, item->getItemCount(), queryCount, flags);
 							n += queryCount;
 						}
 					}
 				} else if (inventoryItem->isStackable() && item->getID() == inventoryItem->getID() && inventoryItem->getItemCount() < 100) {
 					uint32_t remainder = (100 - inventoryItem->getItemCount());
 
-					if (__queryAdd(slotIndex, item, remainder, flags) == RET_NOERROR) {
+					if (queryAdd(slotIndex, item, remainder, flags) == RET_NOERROR) {
 						n += remainder;
 					}
 				}
-			} else if (__queryAdd(slotIndex, item, item->getItemCount(), flags) == RET_NOERROR) { //empty slot
+			} else if (queryAdd(slotIndex, item, item->getItemCount(), flags) == RET_NOERROR) { //empty slot
 				if (item->isStackable()) {
 					n += 100;
 				} else {
@@ -3150,7 +3150,7 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 
 		maxQueryCount = n;
 	} else {
-		const Thing* destThing = __getThing(index);
+		const Thing* destThing = getThing(index);
 		const Item* destItem = NULL;
 
 		if (destThing) {
@@ -3163,7 +3163,7 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 			} else {
 				maxQueryCount = 0;
 			}
-		} else if (__queryAdd(index, item, count, flags) == RET_NOERROR) { //empty slot
+		} else if (queryAdd(index, item, count, flags) == RET_NOERROR) { //empty slot
 			if (item->isStackable()) {
 				maxQueryCount = 100;
 			} else {
@@ -3181,9 +3181,9 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 	}
 }
 
-ReturnValue Player::__queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const
+ReturnValue Player::queryRemove(const Thing* thing, uint32_t count, uint32_t flags) const
 {
-	int32_t index = __getIndexOfThing(thing);
+	int32_t index = getIndexOfThing(thing);
 
 	if (index == -1) {
 		return RET_NOTPOSSIBLE;
@@ -3206,7 +3206,7 @@ ReturnValue Player::__queryRemove(const Thing* thing, uint32_t count, uint32_t f
 	return RET_NOERROR;
 }
 
-Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** destItem,
+Cylinder* Player::queryDestination(int32_t& index, const Thing* thing, Item** destItem,
                                      uint32_t& flags)
 {
 	if (index == 0 /*drop to capacity window*/ || index == INDEX_WHEREEVER) {
@@ -3236,7 +3236,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 
 				if (autoStack && isStackable) {
 					//try find an already existing item to stack with
-					if (__queryAdd(slotIndex, item, item->getItemCount(), 0) == RET_NOERROR) {
+					if (queryAdd(slotIndex, item, item->getItemCount(), 0) == RET_NOERROR) {
 						if (inventoryItem->getID() == item->getID() && inventoryItem->getItemCount() < 100) {
 							index = slotIndex;
 							*destItem = inventoryItem;
@@ -3248,7 +3248,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 						containerList.push_back(subContainer);
 					}
 				} else if (Container* subContainer = inventoryItem->getContainer()) {
-					if (subContainer->__queryAdd(INDEX_WHEREEVER, item, item->getItemCount(), flags) == RET_NOERROR) {
+					if (subContainer->queryAdd(INDEX_WHEREEVER, item, item->getItemCount(), flags) == RET_NOERROR) {
 						index = INDEX_WHEREEVER;
 						*destItem = NULL;
 						return subContainer;
@@ -3256,7 +3256,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 
 					containerList.push_back(subContainer);
 				}
-			} else if (__queryAdd(slotIndex, item, item->getItemCount(), flags) == RET_NOERROR) { //empty slot
+			} else if (queryAdd(slotIndex, item, item->getItemCount(), flags) == RET_NOERROR) { //empty slot
 				index = slotIndex;
 				*destItem = NULL;
 				return this;
@@ -3271,7 +3271,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 				//we need to find first empty container as fast as we can for non-stackable items
 				uint32_t n = tmpContainer->capacity() - tmpContainer->size();
 				while (n) {
-					if (tmpContainer->__queryAdd(tmpContainer->capacity() - n, item, item->getItemCount(), flags) == RET_NOERROR) {
+					if (tmpContainer->queryAdd(tmpContainer->capacity() - n, item, item->getItemCount(), flags) == RET_NOERROR) {
 						index = tmpContainer->capacity() - n;
 						*destItem = NULL;
 						return tmpContainer;
@@ -3315,7 +3315,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 				n++;
 			}
 
-			if (n < tmpContainer->capacity() && tmpContainer->__queryAdd(n, item, item->getItemCount(), flags) == RET_NOERROR) {
+			if (n < tmpContainer->capacity() && tmpContainer->queryAdd(n, item, item->getItemCount(), flags) == RET_NOERROR) {
 				index = n;
 				*destItem = NULL;
 				return tmpContainer;
@@ -3325,7 +3325,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 		return this;
 	}
 
-	Thing* destThing = __getThing(index);
+	Thing* destThing = getThing(index);
 	if (destThing) {
 		*destItem = destThing->getItem();
 	}
@@ -3341,12 +3341,12 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 	}
 }
 
-void Player::__addThing(Thing* thing)
+void Player::addThing(Thing* thing)
 {
-	__addThing(0, thing);
+	addThing(0, thing);
 }
 
-void Player::__addThing(int32_t index, Thing* thing)
+void Player::addThing(int32_t index, Thing* thing)
 {
 	if (index < 0 || index > 11) {
 		return /*RET_NOTPOSSIBLE*/;
@@ -3372,9 +3372,9 @@ void Player::__addThing(int32_t index, Thing* thing)
 	onAddInventoryItem((slots_t)index, item);
 }
 
-void Player::__updateThing(Thing* thing, uint16_t itemId, uint32_t count)
+void Player::updateThing(Thing* thing, uint16_t itemId, uint32_t count)
 {
-	int32_t index = __getIndexOfThing(thing);
+	int32_t index = getIndexOfThing(thing);
 
 	if (index == -1) {
 		return /*RET_NOTPOSSIBLE*/;
@@ -3401,7 +3401,7 @@ void Player::__updateThing(Thing* thing, uint16_t itemId, uint32_t count)
 	onUpdateInventoryItem((slots_t)index, item, oldType, item, newType);
 }
 
-void Player::__replaceThing(uint32_t index, Thing* thing)
+void Player::replaceThing(uint32_t index, Thing* thing)
 {
 	if (index > 11) {
 		return /*RET_NOTPOSSIBLE*/;
@@ -3434,7 +3434,7 @@ void Player::__replaceThing(uint32_t index, Thing* thing)
 	inventory[index] = item;
 }
 
-void Player::__removeThing(Thing* thing, uint32_t count)
+void Player::removeThing(Thing* thing, uint32_t count)
 {
 	Item* item = thing->getItem();
 
@@ -3442,7 +3442,7 @@ void Player::__removeThing(Thing* thing, uint32_t count)
 		return /*RET_NOTPOSSIBLE*/;
 	}
 
-	int32_t index = __getIndexOfThing(thing);
+	int32_t index = getIndexOfThing(thing);
 
 	if (index == -1) {
 		return /*RET_NOTPOSSIBLE*/;
@@ -3482,7 +3482,7 @@ void Player::__removeThing(Thing* thing, uint32_t count)
 	}
 }
 
-int32_t Player::__getIndexOfThing(const Thing* thing) const
+int32_t Player::getIndexOfThing(const Thing* thing) const
 {
 	for (int i = SLOT_FIRST; i < SLOT_LAST; ++i) {
 		if (inventory[i] == thing) {
@@ -3493,17 +3493,17 @@ int32_t Player::__getIndexOfThing(const Thing* thing) const
 	return -1;
 }
 
-int32_t Player::__getFirstIndex() const
+int32_t Player::getFirstIndex() const
 {
 	return SLOT_FIRST;
 }
 
-int32_t Player::__getLastIndex() const
+int32_t Player::getLastIndex() const
 {
 	return SLOT_LAST;
 }
 
-uint32_t Player::__getItemTypeCount(uint16_t itemId, int32_t subType /*= -1*/) const
+uint32_t Player::getItemTypeCount(uint16_t itemId, int32_t subType /*= -1*/) const
 {
 	uint32_t count = 0;
 	for (int i = SLOT_FIRST; i < SLOT_LAST; i++) {
@@ -3580,7 +3580,7 @@ bool Player::removeItemOfType(uint16_t itemId, uint32_t amount, int32_t subType,
 	return true;
 }
 
-std::map<uint32_t, uint32_t>& Player::__getAllItemTypeCount(std::map<uint32_t, uint32_t>& countMap) const
+std::map<uint32_t, uint32_t>& Player::getAllItemTypeCount(std::map<uint32_t, uint32_t>& countMap) const
 {
 	for (int i = SLOT_FIRST; i < SLOT_LAST; i++) {
 		Item* item = inventory[i];
@@ -3599,7 +3599,7 @@ std::map<uint32_t, uint32_t>& Player::__getAllItemTypeCount(std::map<uint32_t, u
 	return countMap;
 }
 
-Thing* Player::__getThing(uint32_t index) const
+Thing* Player::getThing(uint32_t index) const
 {
 	if (index >= SLOT_FIRST && index < SLOT_LAST) {
 		return inventory[index];
@@ -3756,12 +3756,12 @@ bool Player::hasShopItemForSale(uint32_t itemId, uint8_t subType)
 	return false;
 }
 
-void Player::__internalAddThing(Thing* thing)
+void Player::internalAddThing(Thing* thing)
 {
-	__internalAddThing(0, thing);
+	internalAddThing(0, thing);
 }
 
-void Player::__internalAddThing(uint32_t index, Thing* thing)
+void Player::internalAddThing(uint32_t index, Thing* thing)
 {
 	Item* item = thing->getItem();
 
